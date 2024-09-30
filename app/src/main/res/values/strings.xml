@@ -1,0 +1,25 @@
+<resources>
+    <string name="app_name">app de sobrecalentamiento de pc</string>
+    <string name="iniciarsesion">iniciarSesion</string>
+    <string name="iniciarsesion_1">iniciarSesion</string>
+    <string name="iniciar_sesion_1">iniciar sesion</string>
+    <string name="has_olvidado_tu_contrase_a">has_olvidado_tu_contrase_a</string>
+    <string name="username">Username</string>
+    <string name="password">Password</string>
+    <string name="has_olvidado_tu_contrase_aq">has olvidado tu contraseña</string>
+    <string name="has_olvidado_tu_contrase">has olvidado tu contrase?</string>
+    <string name="has_olvidado_tu_contraseña_">has olvidado tu contraseña?</string>
+    <string name="ventiladores">ventiladores</string>
+    <string name="cpu">CPU</string>
+    <string name="control_de_ventilador">Control de Ventilador</string>
+    <string name="estado_apagado">Estado: Apagado</string>
+    <string name="encender">Encender</string>
+    <string name="velocidad">Velocidad</string>
+    <string name="velocidad_0">Velocidad: 0</string>
+    <string name="iniciar">Iniciar</string>
+    <string name="detener">Detener</string>
+    <string name="estado_inactivo">Estado: Inactivo</string>
+    <string name="temperatura_0_c">Temperatura: 0°C</string>
+    <string name="velocidad_1">Velocidad: 0%</string>
+    <string name="control_de_cpu">Control de CPU</string>
+</resources>
