@@ -13,6 +13,18 @@
         android:theme="@style/Theme.AppDeSobrecalentamientoDePc"
         tools:targetApi="31">
         <activity
+            android:name=".datosCpu"
+            android:exported="false" />
+        <activity
+            android:name=".intefaz_de_ventiladores"
+            android:exported="false" />
+        <activity
+            android:name=".interfaz_cpu"
+            android:exported="false" />
+        <activity
+            android:name=".dentro_de_la_app"
+            android:exported="false" />
+        <activity
             android:name=".MainActivity"
             android:exported="true">
             <intent-filter>

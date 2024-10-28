@@ -22,4 +22,17 @@
     <string name="temperatura_0_c">Temperatura: 0°C</string>
     <string name="velocidad_1">Velocidad: 0%</string>
     <string name="control_de_cpu">Control de CPU</string>
+    <string name="regresar">Regresar</string>
+    <string name="agregar_datos">agregar_datos</string>
+    <string name="datos">datos</string>
+    <string name="volver">volver</string>
+    <string name="actualizar_cpu">Actualizar CPU</string>
+    <string name="agregar_cpu">Agregar CPU</string>
+    <string name="estado">Estado</string>
+    <string name="velocidad01">Velocidad</string>
+    <string name="temperatura_c">Temperatura (°C)</string>
+    <string name="eliminar_cpu">Eliminar_cpu</string>
+    <string name="Eliminar_CPU">Eliminar_CPU</string>
+    <string name="agregar_CPU">agregar_CPU</string>
+    <string name="actualizar_CPU">Actualizar_CPU</string>
 </resources>
