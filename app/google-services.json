@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "30138037386",
+    "project_id": "eva3lot",
+    "storage_bucket": "eva3lot.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:30138037386:android:b87061ad6f4e19b4aa2973",
+        "android_client_info": {
+          "package_name": "com.example.appdesobrecalentamientodepc"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCVYSeHq6p_CdqCmr7Fb9JZAfRfdn6xDfI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -1,113 +1,78 @@
 package com.example.appdesobrecalentamientodepc
 
 import android.os.Bundle
-import android.widget.ArrayAdapter
-import android.widget.Button
-import android.widget.EditText
-import android.widget.ListView
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import com.example.appdesobrecalentamientodepc.databinding.ActivityDatosCpuBinding
+import com.example.appdesobrecalentamientodepc.databinding.ActivityMainBinding
+import com.example.appdesobrecalentamientodepc.models.dato
+import com.google.android.material.snackbar.Snackbar
+import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.FirebaseDatabase
 
 class datosCpu : AppCompatActivity() {
-    private lateinit var editTextTemperatura: EditText
-    private lateinit var editTextVelocidad: EditText
-    private lateinit var editTextEstado: EditText
-    private lateinit var btnAgregar: Button
-    private lateinit var btnActualizar: Button
-    private lateinit var btnEliminar: Button
-    private lateinit var listView: ListView
 
-    private val cpuData = mutableListOf<String>()
-    private var selectedPosition: Int? = null
+    private lateinit var binding: ActivityDatosCpuBinding
+
+    //activar el firebase realtime database
+    private lateinit var database: DatabaseReference
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-        setContentView(R.layout.activity_datos_cpu)
 
-        editTextTemperatura = findViewById(R.id.editTextTemperatura)
-        editTextVelocidad = findViewById(R.id.editTextVelocidad)
-        editTextEstado = findViewById(R.id.editTextEstado)
-        btnAgregar = findViewById(R.id.btnAgregar)
-        btnActualizar = findViewById(R.id.btnActualizar)
-        btnEliminar = findViewById(R.id.btnEliminar)
-        listView = findViewById(R.id.listView)
+        binding =  ActivityDatosCpuBinding.inflate(layoutInflater)
 
-        val adapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, cpuData)
-        listView.adapter = adapter
-
-        btnAgregar.setOnClickListener {
-            val temperatura = editTextTemperatura.text.toString()
-            val velocidad = editTextVelocidad.text.toString()
-            val estado = editTextEstado.text.toString()
-
-            if (temperatura.isNotEmpty() && velocidad.isNotEmpty() && estado.isNotEmpty()) {
-                val cpuInfo = "Temperatura: $temperatura, Velocidad: $velocidad, Estado: $estado"
-                if (selectedPosition != null) {
-                    cpuData[selectedPosition!!] = cpuInfo
-                    selectedPosition = null
-                } else {
-                    cpuData.add(cpuInfo)
-                }
-                adapter.notifyDataSetChanged()
-                clearFields()
-            }
-        }
-
-        btnActualizar.setOnClickListener {
-            selectedPosition?.let { position ->
-                val temperatura = editTextTemperatura.text.toString()
-                val velocidad = editTextVelocidad.text.toString()
-                val estado = editTextEstado.text.toString()
-
-                if (temperatura.isNotEmpty() && velocidad.isNotEmpty() && estado.isNotEmpty()) {
-                    cpuData[position] = "Temperatura: $temperatura, Velocidad: $velocidad, Estado: $estado"
-                    adapter.notifyDataSetChanged()
-                    clearFields()
-                    selectedPosition = null
-                }
-            }
-        }
-
-        btnEliminar.setOnClickListener {
-            selectedPosition?.let { position ->
-                cpuData.removeAt(position)
-                adapter.notifyDataSetChanged()
-                clearFields()
-                selectedPosition = null
-            }
-        }
-
-
-        listView.setOnItemClickListener { parent, view, position, id ->
-            selectedPosition = position
-            val selectedItem = cpuData[position]
-
-            val parts = selectedItem.split(", ")
-            if (parts.size == 3) {
-                editTextTemperatura.setText(parts[0].substringAfter(": ").trim())
-                editTextVelocidad.setText(parts[1].substringAfter(": ").trim())
-                editTextEstado.setText(parts[2].substringAfter(": ").trim())
-            }
-        }
-
+        setContentView(binding.root)
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
 
-        val btnVolver: Button = findViewById(R.id.btnVolver)
-        btnVolver.setOnClickListener {
-            finish()
-        }
-    }
+        //iniciar base de datos
 
-    private fun clearFields() {
-        editTextTemperatura.text.clear()
-        editTextVelocidad.text.clear()
-        editTextEstado.text.clear()
+        database = FirebaseDatabase.getInstance().getReference("DATOS")
+
+        binding.btnGuardar.setOnClickListener{
+            //obtener los datos
+
+            val temperatura = binding.etNombreProducto.text.toString()
+            val velocidad = binding.etPrecioProducto.text.toString()
+            val estado = binding.etDescripcionProducto.text.toString()
+            //generar el id ramdon
+
+            val id = database.child("DATOS").push().key
+
+            if (temperatura.isEmpty()){
+                binding.etNombreProducto.error = "por favor ingresa una temperatura"
+                return@setOnClickListener
+            }
+            if (velocidad.isEmpty()){
+                binding.etPrecioProducto.error = "por favor ingresa una velocidad"
+                return@setOnClickListener
+            }
+            if (estado.isEmpty()){
+                binding.etDescripcionProducto.error = "por favor ingresa un estado"
+                return@setOnClickListener
+            }
+
+
+            val dato = dato (id,temperatura,velocidad,estado)
+
+            database.child(id!!).setValue(dato)
+                .addOnSuccessListener{
+                    binding.etNombreProducto.setText("")
+                    binding.etPrecioProducto.setText("")
+                    binding.etDescripcionProducto.setText("")
+                    Snackbar.make(binding.root, "dato agregado", Snackbar.LENGTH_SHORT).show()
+                }
+
+        }
+
+
     }
 }

@@ -2,65 +2,91 @@ package com.example.appdesobrecalentamientodepc
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
-import android.widget.Button
-import android.widget.EditText
 import android.widget.Toast
-import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import com.example.appdesobrecalentamientodepc.databinding.ActivityMainBinding
+import com.google.firebase.FirebaseApp
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
 
 class MainActivity : AppCompatActivity() {
 
+    // Configuración de ViewBinding
+    private lateinit var binding: ActivityMainBinding
+
+    // Configurar Firebase Auth
+    private lateinit var auth: FirebaseAuth
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
         setContentView(R.layout.activity_main)
 
+        // Inicializar Firebase
+        FirebaseApp.initializeApp(this)
 
+        // Iniciar ViewBinding
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+
+        // Ajustar insets de la ventana
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { view, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             view.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
 
+        // Iniciar Firebase Auth
+        auth = Firebase.auth
 
-        val btnIniciarSesion = findViewById<Button>(R.id.btnIniciarSesion)
+        // Configurar el botón de inicio de sesión
+        binding.btnIniciarSesion.setOnClickListener {
+            val email = binding.etEmail.text.toString()
+            val password = binding.etPassword.text.toString()
 
-        btnIniciarSesion.setOnClickListener {
-            navigateToApp()
-            btnIniciarSesion.setOnClickListener {
-                try {
-                    val nombre: String = findViewById<EditText>(R.id.usuario).text.toString()
-                    val clave: String =
-                        findViewById<EditText>(R.id.clave).text.toString()  // Cambio a `clave`
+            if (email.isEmpty()) {
+                binding.etEmail.error = "Por favor, ingrese un correo"
+                return@setOnClickListener
+            }
 
-                    Log.e("Nombre", nombre)
-                    Log.e("Clave", clave)
+            if (password.isEmpty()) {
+                binding.etPassword.error = "Por favor, ingrese la contraseña"
+                return@setOnClickListener
+            }
 
-                    if (nombre.isNotEmpty() && clave.isNotEmpty()) {  // Ambos campos deben tener contenido
-                        val intent = Intent(this, dentro_de_la_app::class.java)
-                        intent.putExtra("nombre", nombre)
-                        startActivity(intent)
-                    } else {
-                        // Mensaje de error si falta el nombre o la clave
-                        if (nombre.isEmpty()) {
-                            Toast.makeText(this, "No ingresaste tu nombre", Toast.LENGTH_SHORT)
-                                .show()
-                        } else if (clave.isEmpty()) {
-                            Toast.makeText(this, "No ingresaste tu clave", Toast.LENGTH_SHORT)
-                                .show()
-                        }
-                    }
-                } catch (e: Exception) {
-                    Log.e("Error", e.message.toString())
-                }
+            signIn(email, password)
+        }
+
+        //programar el enlace para registrarse
+        binding.tvRegistrarse.setOnClickListener{
+            try {
+                val intent = Intent(this,RegistrarActivity::class.java)
+                startActivity(intent)
+            } catch (e: Exception){
+                Toast.makeText(this,e.toString(), Toast.LENGTH_SHORT)
+                    .show()
             }
         }
     }
 
-            private fun navigateToApp() {
 
+
+    private fun signIn(email: String, password: String) {
+        auth.signInWithEmailAndPassword(email, password)
+            .addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    Toast.makeText(this, "Inicio de sesión exitoso", Toast.LENGTH_SHORT).show()
+
+                    //para cambiar de pantalla
+                    val intent = Intent(this, dentro_de_la_app::class.java)
+                    startActivity(intent)
+
+
+                } else {
+                    Toast.makeText(this, "Error al iniciar sesion", Toast.LENGTH_LONG).show()
+                }
+            }
     }
 }
